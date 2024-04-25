@@ -1,0 +1,111 @@
+---
+title: "Youtube"
+author: "jordy Lopez"
+date: "2024-04-18"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+
+---
+
+```{r}
+
+## These are all the libraries used in my code
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(janitor)
+library(lubridate)
+
+```
+
+---
+
+
+---
+```{r}
+#import data
+Youtube = read_csv("Global Youtube Statistics.csv", show_col_types =  FALSE) %>% clean_names()
+
+#Youtube = date1
+Youtube
+
+```
+
+---
+
+```{r}
+# does music get more views than the other stuff
+music_views <- Youtube %>%
+  filter(category == "Music") %>%
+  summarise(total_views = sum(video_views))
+
+other_views <- Youtube %>%
+  filter(category != "Music") %>%
+  summarise(total_views = sum(video_views))
+#graphongs comparison
+views_comparison <- data.frame(Category = c("Music", "Other"),
+                               Total_Views = c(music_views$total_views, other_views$total_views))
+
+ggplot(views_comparison, aes(x = Category, y = Total_Views, fill = Category)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Views by Video Category",
+       x = "Category",
+       y = "Total Views") +
+  theme_minimal()
+
+#does more subscribers mean more views
+ggplot(Youtube, aes(x = subscribers, y = video_views)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # Add regression line
+  labs(title = "Subscriber Count vs. Views",
+       x = "Subscribers",
+       y = "Video_views") +
+  theme_minimal()
+
+
+
+
+```
+```{r}
+#yearly earning compared to amount of uploads
+earnings_uploads <- Youtube %>%
+  group_by(youtuber) %>%
+  summarise(total_earnings = sum(highest_yearly_earnings),
+            total_uploads = sum(uploads))
+
+ggplot(earnings_uploads, aes(x = total_uploads, y = total_earnings)) +
+  geom_point(color = "darkgreen") + 
+  labs(title = "Total Yearly Earnings vs. Total Uploads",
+       x = "Total Uploads",
+       y = "1 Yearly Earnings") +
+  theme_minimal()
+
+
+
+
+```
+---
+
+```{r}
+#popular_month <- Youtube %>%
+  #group_by(created_year, created_month) %>%
+  #summarise(accounts_created = n()) %>%
+  #arrange(year, desc(accounts_created)) %>%
+  #slice(1)
+
+#ggplot(popular_month, aes(x = factor(month), y = accounts_created, fill = factor(year))) +
+  #geom_bar(stat = "identity", position = "dodge") +
+  #labs(title = "Most Popular Month to Create YouTube Account by Year",
+  #     x = "Month",
+  #     y = "Number of Accounts Created",
+  #     fill = "Year") +
+ # theme_minimal()
+
+```
