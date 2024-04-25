@@ -1,5 +1,5 @@
 ---
-title: "Youtube"
+title: "Top 1000 Youtube Channels"
 author: "jordy Lopez"
 date: "2024-04-18"
 output: slidy_presentation
@@ -13,10 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ---
+ These are all the libraries used in my code
+```{r,message=FALSE, warning=FALSE}
 
-```{r}
-
-## These are all the libraries used in my code
 library(readr)
 library(dplyr)
 library(ggplot2)
@@ -40,6 +39,8 @@ Youtube
 
 ---
 
+
+
 ```{r}
 # does music get more views than the other stuff
 music_views <- Youtube %>%
@@ -50,16 +51,29 @@ other_views <- Youtube %>%
   filter(category != "Music") %>%
   summarise(total_views = sum(video_views))
 #graphongs comparison
-views_comparison <- data.frame(Category = c("Music", "Other"),
-                               Total_Views = c(music_views$total_views, other_views$total_views))
+views_comparison <- data.frame(Category = c("Music", "Other"), Total_Views = c(music_views$total_views, other_views$total_views))
 
+music_views
+
+other_views
+
+views_comparison
+```
+
+---
+
+```{r}
 ggplot(views_comparison, aes(x = Category, y = Total_Views, fill = Category)) +
   geom_bar(stat = "identity") +
   labs(title = "Total Views by Video Category",
        x = "Category",
        y = "Total Views") +
   theme_minimal()
+```
 
+---
+
+```{r}
 #does more subscribers mean more views
 ggplot(Youtube, aes(x = subscribers, y = video_views)) +
   geom_point(color = "blue") +
@@ -68,11 +82,10 @@ ggplot(Youtube, aes(x = subscribers, y = video_views)) +
        x = "Subscribers",
        y = "Video_views") +
   theme_minimal()
-
-
-
-
 ```
+
+---
+
 ```{r}
 #yearly earning compared to amount of uploads
 earnings_uploads <- Youtube %>%
@@ -91,9 +104,10 @@ ggplot(earnings_uploads, aes(x = total_uploads, y = total_earnings)) +
 
 
 ```
+
 ---
 
-```{r}
+```{r,echo=FALSE}
 #popular_month <- Youtube %>%
   #group_by(created_year, created_month) %>%
   #summarise(accounts_created = n()) %>%
